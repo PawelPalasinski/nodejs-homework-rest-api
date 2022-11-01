@@ -32,7 +32,6 @@ router.get("/:contactId", async (req, res, next) => {
 // Add new contact (Postman: Body -> select: raw, JSON)
 
 router.post("/", async (req, res, next) => {
-
   const validatePost = validationForPost(req.body).error;
   if (validatePost) {
     return res.status(400).json({
@@ -54,7 +53,7 @@ router.delete("/:contactId", async (req, res, next) => {
   res.status(204).json();
 });
 
-// PUT - Contact update
+// PUT - Contact update (e.g. http://localhost:3000/api/contacts/1)
 
 router.put("/:contactId", async (req, res, next) => {
   const { contactId } = req.params;
@@ -67,10 +66,10 @@ router.put("/:contactId", async (req, res, next) => {
   const updatedContact = await updateContact(contactId, req.body);
 
   if (updatedContact) {
-    res.json({ status: 200, data: updatedContact });
+    res.status(200).json({ data: updatedContact });
   } else {
-    res.json({ status: 404, message: "Not found" });
+    res.status(404).json({ message: "Not found" });
   }
 });
-  
+
 module.exports = router;
