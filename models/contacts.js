@@ -4,7 +4,7 @@ const { nanoid } = require("nanoid");
 
 const contactsPath = path.resolve("./models/contacts.json");
 
-// Get all contacts
+// GET - Get all contacts
 
 const listContacts = async () => {
   try {
@@ -15,7 +15,7 @@ const listContacts = async () => {
   }
 };
 
-// Find contact by id
+// GET - Find contact by id
 
 const getContactById = async (contactId) => {
   const contactsArr = await listContacts();
@@ -23,12 +23,12 @@ const getContactById = async (contactId) => {
     (element) => element.contactId === contactId
   );
   if (!contact) {
-    return console.log('Contact not found');
+    return console.log("Contact not found");
   }
   return contact;
 };
 
-// Add new contact
+// POST - Add new contact
 
 const addContact = async (body) => {
   try {
@@ -45,14 +45,15 @@ const addContact = async (body) => {
   }
 };
 
-// Remove contact by id
+// DELETE - Remove contact by id from the list
 
 const removeContact = async (contactId) => {
   try {
     const contactsArr = await listContacts();
     const contact = await getContactById(contactId);
     const itemIndex = contactsArr.findIndex(
-      (element) => element.id === contactId);
+      (element) => element.id === contactId
+    );
     if (itemIndex === -1) {
       return null;
     }
@@ -66,7 +67,14 @@ const removeContact = async (contactId) => {
 
 // Contact update
 
-const updateContact = async (contactId, body) => {};
+const updateContact = async (contactId, body) => {
+  try {
+    const contact = await getContactById(contactId);
+    return contact;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 module.exports = {
   listContacts,
