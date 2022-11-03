@@ -68,12 +68,14 @@ const removeContact = async (contactId) => {
 // Contact update
 
 const updateContact = async (contactId, body) => {
-  try {
-    const contact = await getContactById(contactId);
-    return contact;
-  } catch (error) {
-    console.log(error.message);
-  }
+  const contacts = await listContacts();
+  const index = contacts.findIndex(({ id }) => id.toString() === contactId);
+
+  if (index === -1) return null;
+  contacts[index] = { ...contacts[index], ...body };
+
+  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2), "utf8");
+  return contacts[index];
 };
 
 module.exports = {

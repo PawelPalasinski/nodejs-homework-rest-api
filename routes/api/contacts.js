@@ -56,19 +56,27 @@ router.delete("/:contactId", async (req, res, next) => {
 // PUT - Contact update (e.g. http://localhost:3000/api/contacts/1)
 
 router.put("/:contactId", async (req, res, next) => {
-  const { contactId } = req.params;
-  const { error, value } = validationForPut(req.body);
+  try {
+    const { error } = validationForPut(req.body);
 
-  if (error) {
-    return res.json({ status: 400, message: "missing fields" });
-  }
+    if (error) {
+      return res.json({ status: 400, message: "missing fields" });
+    }
 
-  const updatedContact = await updateContact(contactId, req.body);
-
-  if (updatedContact) {
-    res.status(200).json({ data: updatedContact });
-  } else {
-    res.status(404).json({ message: "Not found" });
+    const contact = await updateContact(req.params.contactId, req.body);
+    if (contact) {
+      return res.status(200).json({
+        data: {
+          contact,
+        },
+      });
+    } else {
+      return res.status(404).json({
+        message: "Not Found!",
+      });
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
