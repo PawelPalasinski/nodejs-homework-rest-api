@@ -1,11 +1,11 @@
 const Contact = require("./schemas/contacts");
 
 const getAll = async () => {
-  return Contact.find();
+  return Contact.find({}).lean();
 };
 
 const getById = (id) => {
-  return Contact.findOne({ _id: id });
+  return Contact.findById({ _id: id });
 };
 
 const create = ({ title, text }) => {

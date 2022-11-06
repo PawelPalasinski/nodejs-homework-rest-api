@@ -7,7 +7,6 @@
 //     `Server running. Use our API on http://localhost:${PORT}/api/contacts/`)
 // );
 
-
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
@@ -27,7 +26,7 @@ app.use(express.json());
 app.use(cors());
 
 const routerApi = require("./api");
-app.use("/api/contacts", routerApi);
+app.use("/api/", routerApi);
 
 app.use((_, res, __) => {
   res.status(404).json({
@@ -48,30 +47,29 @@ app.use((err, _, res, __) => {
   });
 });
 
-// const PORT = process.env.PORT || 3000;
-// const uriDb = process.env.DB_HOST;
+const PORT = process.env.PORT || 3000;
+const uriDb = process.env.DB_HOST;
 
-// const connection = mongoose.connect(uriDb, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
+const connection = mongoose.connect(uriDb, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-// connection
-//   .then(() => {
-//     app.listen(PORT, function () {
-//       console.log(`Server running. Use our API on port: ${PORT}`);
-//     });
-//   })
-//   .catch((err) =>
-//     console.log(`Server not running. Error message: ${err.message}`)
-// );
-
-const { DB_HOST, PORT = 3000 } = process.env;
-
-mongoose
-  .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => app.listen(PORT))
-  .catch((error) => {
-    console.log(error.message);
+connection
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running. Use our API on port: ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(`Server not running. Error message: ${err.message}`);
     process.exit(1);
   });
+
+// mongoose
+//   .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
+//   .then(() => app.listen(PORT))
+//   .catch((error) => {
+//     console.log(error.message);
+//     process.exit(1);
+//   });

@@ -2,14 +2,15 @@ const service = require("../service");
 
 const get = async (req, res, next) => {
   try {
-    const results = await service.getAll();
-    res.json({
-      status: "success",
-      code: 200,
-      data: {
-        contacts: results,
-      },
-    });
+    const contacts = await service.getAll();
+    // res.json({
+    //   status: "success",
+    //   code: 200,
+    //   data: {
+    //     contacts,
+    //   },
+    // });
+     res.status(200).json(contacts);
   } catch (e) {
     console.error(e);
     next(e);
@@ -19,13 +20,14 @@ const get = async (req, res, next) => {
 const getById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const result = await service.getById(id);
-    if (result) {
-      res.json({
-        status: "success",
-        code: 200,
-        data: { contact: result },
-      });
+    const contact = await service.getById(id);
+    if (contact) {
+      // res.json({
+      //   status: "success",
+      //   code: 200,
+      //   data: { contact },
+      // });
+           res.status(200).json(contact);
     } else {
       res.status(404).json({
         status: "error",
@@ -41,14 +43,13 @@ const getById = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
-  const { name, email, phone, favorite } = req.body;
+  // const contact = req.body;
   try {
-    const result = await service.create({ name, email, phone, favorite });
+    // const result = await service.create(contact);
+    const newContact = await service.create(req.body);
 
     res.status(201).json({
-      status: "success",
-      code: 201,
-      data: { contact: result },
+      newContact
     });
   } catch (e) {
     console.error(e);
@@ -58,19 +59,16 @@ const create = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const { id } = req.params;
-  const { name, email, phone, favorite } = req.body;
+  const contact = req.body;
   try {
     const result = await service.update(id, {
-      name,
-      email,
-      phone,
-      favorite,
+      contact
     });
     if (result) {
       res.json({
         status: "success",
         code: 200,
-        data: { contact: result },
+        data: { result },
       });
     } else {
       res.status(404).json({
@@ -96,7 +94,7 @@ const updateFavorite = async (req, res, next) => {
       res.json({
         status: "success",
         code: 200,
-        data: { contact: result },
+        data: { result },
       });
     } else {
       res.status(404).json({
