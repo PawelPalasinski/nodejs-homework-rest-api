@@ -14,13 +14,13 @@ const { validationForPost, validationForPut } = require("./validation");
 // GET all contacts (http://localhost:3000/api/contacts/)
 
 router.get("/", async (req, res, next) => {
-  const contacts = await listContacts();
-  res.status(200).json({ body: contacts });
+  const contactsList = await listContacts();
+  res.status(200).json({ body: contactsList });
 });
 
 // Find contact by id (e.g. http://localhost:3000/api/contacts/1)
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:contactId", async (req, res, next) => {
   try {
     const data = await getContactById(req.params.id);
     res.json(data);
@@ -46,37 +46,29 @@ router.post("/", async (req, res, next) => {
 
 // Remove contact by id from the list (e.g. http://localhost:3000/api/contacts/5)
 
-router.delete("/:id", async (req, res, next) => {
-  const { id } = req.params;
-  const deleteContact = await removeContact(id);
+router.delete("/:contactId", async (req, res, next) => {
+  const { contactId } = req.params;
+  const deleteContact = await removeContact(contactId);
   console.log(deleteContact);
   res.status(204).json();
 });
 
 // PUT - Contact update (e.g. http://localhost:3000/api/contacts/1)
 
-router.put("/:id", async (req, res, next) => {
-  try {
-    const { error } = validationForPut(req.body);
+router.put("/:contactId", async (req, res, next) => {
+  const { contactId } = req.params;
+  const { error, value } = validationForPut(req.body);
 
-    if (error) {
-      return res.json({ status: 400, message: "missing fields" });
-    }
+  if (error) {
+    return res.json({ status: 400, message: "missing fields" });
+  }
 
-    const contact = await updateContact(req.params.id, req.body);
-    if (contact) {
-      return res.status(200).json({
-        data: {
-          contact,
-        },
-      });
-    } else {
-      return res.status(404).json({
-        message: "Not Found!",
-      });
-    }
-  } catch (error) {
-    next(error);
+  const updatedContact = await updateContact(contactId, req.body);
+
+  if (updatedContact) {
+    res.status(200).json({ data: updatedContact });
+  } else {
+    res.status(404).json({ message: "Not found" });
   }
 });
 
