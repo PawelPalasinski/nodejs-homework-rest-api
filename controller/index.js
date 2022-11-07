@@ -43,10 +43,10 @@ const getById = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
-  // const contact = req.body;
+   const { name, email, phone } = req.body
   try {
     // const result = await service.create(contact);
-    const newContact = await service.create(req.body);
+    const newContact = await service.createNew({ name, email, phone });
 
     res.status(201).json({
       newContact

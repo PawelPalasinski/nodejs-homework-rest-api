@@ -8,8 +8,8 @@ const getById = (id) => {
   return Contact.findById({ _id: id });
 };
 
-const create = ({ title, text }) => {
-  return Contact.create({ title, text });
+const createNew = ({ name, email, phone }) => {
+  return Contact.create({ name, email, phone });
 };
 
 const update = (id, fields) => {
@@ -23,7 +23,7 @@ const remove = (id) => {
 module.exports = {
   getAll,
   getById,
-  create,
+  createNew,
   update,
   remove,
 };
