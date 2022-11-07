@@ -1,12 +1,3 @@
-// const app = require("./app");
-
-// const PORT = 3000;
-
-// app.listen(PORT, () =>
-//   console.log(
-//     `Server running. Use our API on http://localhost:${PORT}/api/contacts/`)
-// );
-
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
@@ -19,10 +10,7 @@ const app = express();
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
-
-// parse application/json
 app.use(express.json());
-// cors
 app.use(cors());
 
 const routerApi = require("./api");
@@ -58,18 +46,12 @@ const connection = mongoose.connect(uriDb, {
 connection
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server running. Use our API on port: ${PORT}`);
+      console.log(`
+      Database connection successful. 
+      Server running. Use our API on port: ${PORT}`);
     });
   })
   .catch((err) => {
     console.log(`Server not running. Error message: ${err.message}`);
     process.exit(1);
   });
-
-// mongoose
-//   .connect(DB_HOST, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => app.listen(PORT))
-//   .catch((error) => {
-//     console.log(error.message);
-//     process.exit(1);
-//   });

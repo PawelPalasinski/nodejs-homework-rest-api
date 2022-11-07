@@ -6,13 +6,12 @@ const contact = new Schema(
     name: {
       type: String,
       minlength: 3,
-      maxlength: 170,
-      // required: [true, "Set name for contact"],
+      maxlength: 100,
     },
     email: {
       type: String,
       minlength: 3,
-      maxlength: 170,
+      maxlength: 100,
     },
     phone: {
       type: String,
