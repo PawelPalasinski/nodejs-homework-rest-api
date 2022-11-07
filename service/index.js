@@ -16,10 +16,6 @@ const update = (id, fields) => {
   return Contact.findByIdAndUpdate({ _id: id }, fields, { new: true });
 };
 
-// const updateFavorite = (id, favorite) => {
-// return Contact.findByIdAndUpdate({ _id: id }, favorite, { new: false });
-// }
-
 const remove = (id) => {
   return Contact.findByIdAndRemove({ _id: id });
 };
@@ -29,6 +25,5 @@ module.exports = {
   getById,
   createNew,
   update,
-  // updateFavorite,
   remove,
 };
