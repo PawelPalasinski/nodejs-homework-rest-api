@@ -41,9 +41,7 @@ const create = async (req, res, next) => {
   try {
     const newContact = await service.createNew({ name, email, phone });
 
-    res.status(201).json({
-      newContact,
-    });
+    res.status(201).json(newContact);
   } catch (e) {
     console.error(e);
     next(e);
