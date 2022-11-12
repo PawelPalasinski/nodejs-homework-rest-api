@@ -5,6 +5,14 @@ const mongoose = require("mongoose");
 
 require("dotenv").config();
 
+mongoose.Promise = global.Promise;
+// mongoose.connect(process.env.DB_HOST, {
+//   useNewUrlParser: true,
+//   useCreateIndex: true,
+//   useUnifiedTopology: true,
+// });
+
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -12,6 +20,10 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(express.json());
 app.use(cors());
+
+
+require("./config/config-passport");
+
 
 const routerApi = require("./api");
 app.use("/api/", routerApi);
