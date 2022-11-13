@@ -9,10 +9,9 @@ router.put("/contacts/:id", ctrlContact.update);
 router.patch("/contacts/:id/favorite", ctrlContact.updateFavorite);
 router.delete("/contacts/:id", ctrlContact.remove);
 
-router.post("/users/signup", ctrlContact.signup); // ok
-router.post("/users/login", ctrlContact.login); // ok
-router.get("/users/current", ctrlContact.auth, ctrlContact.current); // ok
+router.post("/users/signup", ctrlContact.signup);
+router.post("/users/login", ctrlContact.login);
+router.get("/users/current", ctrlContact.auth, ctrlContact.current);
 router.get("/users/logout", ctrlContact.auth, ctrlContact.logout);
-
 
 module.exports = router;
