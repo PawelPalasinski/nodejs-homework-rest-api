@@ -129,8 +129,7 @@ const auth = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (!user || err) {
       return res.status(401).json({
-        message: "Unauthorized",
-        data: "Unauthorized",
+        message: "Not authorized"
       });
     }
     req.user = user;
@@ -146,8 +145,6 @@ const login = async (req, res, next) => {
 
   if (!user || !user.validPassword(password)) {
     return res.status(400).json({
-      status: "error",
-      code: 400,
       message: "Incorrect login or password",
       data: "Bad request",
     });
@@ -159,18 +156,16 @@ const login = async (req, res, next) => {
   };
 
   const token = jwt.sign(payload, secret, { expiresIn: "1h" });
-  res.json({
-    status: "success",
-    code: 200,
+  res.status(200).json({
     data: {
       token,
     },
   });
 };
 
-// Registration
+// Signup
 
-const registration = async (req, res, next) => {
+const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -193,19 +188,30 @@ const registration = async (req, res, next) => {
   }
 };
 
+// Current
 
-// List
-
-const list = (req, res, next) => {
-  const { username } = req.user;
-  res.json({
-    status: "success",
-    code: 200,
+const current = (req, res, next) => {
+  const { username, email, subscription } = req.user;
+  res.status(200).json({
     data: {
       message: `Authorization was successful: ${username}`,
+      ResponseBody: {
+        email: `${email}`,
+        subscription: `${subscription}`,
+      },
     },
   });
 };
+
+// Logout
+
+const logout = async (req, res) => {
+  const {_id} = req.user;
+  await User.findByIdAndUpdate(_id, { token: null });
+   res.status(204).json({
+     message: "No Content",
+   });
+}
 
 
 module.exports = {
@@ -217,6 +223,7 @@ module.exports = {
   remove,
   auth,
   login,
-  registration,
-  list
+  signup,
+  current,
+  logout,
 };
