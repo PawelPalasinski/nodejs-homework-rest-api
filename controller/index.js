@@ -129,7 +129,7 @@ const auth = (req, res, next) => {
   passport.authenticate("jwt", { session: false }, (err, user) => {
     if (!user || err) {
       return res.status(401).json({
-        message: "Not authorized"
+        message: "Not authorized",
       });
     }
     req.user = user;
@@ -195,7 +195,7 @@ const current = (req, res, next) => {
   res.status(200).json({
     data: {
       message: `Authorization was successful: ${username}`,
-      ResponseBody: {
+      responseBody: {
         email: `${email}`,
         subscription: `${subscription}`,
       },
@@ -206,13 +206,12 @@ const current = (req, res, next) => {
 // Logout
 
 const logout = async (req, res) => {
-  const {_id} = req.user;
+  const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: null });
-   res.status(204).json({
-     message: "No Content",
-   });
-}
-
+  res.status(204).json({
+    message: "No Content",
+  });
+};
 
 module.exports = {
   get,
