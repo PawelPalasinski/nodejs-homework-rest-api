@@ -1,30 +1,23 @@
-const {
-  find,
-  findById,
-  create,
-  findByIdAndUpdate,
-  findByIdAndRemove,
-} = require("./schemas/contacts");
-
+const Contact = require("./schemas/contacts");
 
 const getAll = async () => {
-  return find({}).lean();
+  return Contact.find({}).lean();
 };
 
 const getById = (id) => {
-  return findById({ _id: id });
+  return Contact.findById({ _id: id });
 };
 
 const createNew = (c) => {
-  return create(c);
+  return Contact.create(c);
 };
 
 const update = (id, fields) => {
-  return findByIdAndUpdate({ _id: id }, fields, { new: true });
+  return Contact.findByIdAndUpdate({ _id: id }, fields, { new: true });
 };
 
 const remove = (id) => {
-  return findByIdAndRemove({ _id: id });
+  return Contact.findByIdAndRemove({ _id: id });
 };
 
 module.exports = {

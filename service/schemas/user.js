@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const bCrypt = require("bcryptjs");
-
 const Schema = mongoose.Schema;
+
+const bCrypt = require("bcryptjs");
 
 const userSchema = new Schema(
   {
@@ -20,7 +20,7 @@ const userSchema = new Schema(
       type: String,
       validate: {
         validator: function (v) {
-          return /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/i.test(
+          return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/gm.test(
             v
           );
         },
