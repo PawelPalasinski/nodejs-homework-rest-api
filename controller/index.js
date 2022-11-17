@@ -1,5 +1,10 @@
 const service = require("../service");
 
+const passport = require("passport");
+const User = require("../service/schemas/user");
+const jwt = require("jsonwebtoken");
+const secret = process.env.SECRET;
+
 // GET all contacts
 
 const get = async (req, res, next) => {
@@ -118,6 +123,96 @@ const remove = async (req, res, next) => {
   }
 };
 
+// Authorization
+
+const auth = (req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user) => {
+    if (!user || err) {
+      return res.status(401).json({
+        message: "Not authorized",
+      });
+    }
+    req.user = user;
+    next();
+  })(req, res, next);
+};
+
+// Login
+
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user || !user.validPassword(password)) {
+    return res.status(400).json({
+      message: "Incorrect login or password",
+      data: "Bad request",
+    });
+  }
+
+  const payload = {
+    id: user.id,
+    username: user.username,
+  };
+
+  const token = jwt.sign(payload, secret, { expiresIn: "1h" });
+  res.status(200).json({
+    data: {
+      token,
+    },
+  });
+};
+
+// Signup
+
+const signup = async (req, res, next) => {
+  const { username, email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (user) {
+    return res.status(409).json({
+      message: "Email is already in use",
+      data: "Conflict",
+    });
+  }
+  try {
+    const newUser = new User({ username, email });
+    newUser.setPassword(password);
+    await newUser.save();
+    res.status(201).json({
+      data: {
+        message: "Registration successful",
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Current
+
+const current = (req, res, next) => {
+  const { username, email, subscription } = req.user;
+  res.status(200).json({
+    data: {
+      message: `Authorization was successful: ${username}`,
+      responseBody: {
+        email: `${email}`,
+        subscription: `${subscription}`,
+      },
+    },
+  });
+};
+
+// Logout
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: null });
+  res.status(204).json({
+    message: "No Content",
+  });
+};
+
 module.exports = {
   get,
   getById,
@@ -125,4 +220,9 @@ module.exports = {
   update,
   updateFavorite,
   remove,
+  auth,
+  login,
+  signup,
+  current,
+  logout,
 };

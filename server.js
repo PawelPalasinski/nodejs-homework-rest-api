@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 
 require("dotenv").config();
 
+mongoose.Promise = global.Promise;
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -13,6 +15,10 @@ app.use(logger(formatsLogger));
 app.use(express.json());
 app.use(cors());
 
+
+require("./config/config-passport");
+
+
 const routerApi = require("./api");
 app.use("/api/", routerApi);
 
@@ -20,7 +26,7 @@ app.use((_, res, __) => {
   res.status(404).json({
     status: "error",
     code: 404,
-    message: "Use api on routes: /api/contacts",
+    message: `Use api on routes: /api/contacts`,
     data: "Not found",
   });
 });
