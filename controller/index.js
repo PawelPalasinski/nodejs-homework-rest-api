@@ -1,9 +1,9 @@
 const service = require("../service");
-
 const passport = require("passport");
 const User = require("../service/schemas/user");
 const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
+const gravatar = require("gravatar");
 
 // GET all contacts
 
@@ -153,12 +153,19 @@ const login = async (req, res, next) => {
   const payload = {
     id: user.id,
     username: user.username,
+    subscription: user.subscription,
   };
 
   const token = jwt.sign(payload, secret, { expiresIn: "1h" });
   res.status(200).json({
     data: {
       token,
+      message: "You are logged in",
+    },
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };
@@ -175,12 +182,16 @@ const signup = async (req, res, next) => {
     });
   }
   try {
-    const newUser = new User({ username, email });
+    const avatarURL = gravatar.url({ email, s: "200", r: "pg" });
+    const newUser = new User({ username, email, avatarURL });
     newUser.setPassword(password);
     await newUser.save();
     res.status(201).json({
       data: {
         message: "Registration successful",
+        email: newUser.email,
+        subscription: newUser.subscription,
+        avatarURL: newUser.avatarURL,
       },
     });
   } catch (error) {
@@ -191,13 +202,14 @@ const signup = async (req, res, next) => {
 // Current
 
 const current = (req, res, next) => {
-  const { username, email, subscription } = req.user;
+  const { username, email, subscription, avatarURL } = req.user;
   res.status(200).json({
     data: {
       message: `Authorization was successful: ${username}`,
       responseBody: {
         email: `${email}`,
         subscription: `${subscription}`,
+        avatarURL: `${avatarURL}`,
       },
     },
   });

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
 const bCrypt = require("bcryptjs");
 
 const userSchema = new Schema(
@@ -47,6 +46,7 @@ const userSchema = new Schema(
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
+    avatarURL: { type: String },
     token: {
       type: String,
       default: null,
