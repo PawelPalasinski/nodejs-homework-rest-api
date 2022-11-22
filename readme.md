@@ -4,15 +4,16 @@
 
 ### Features
 - Contacts
-    - [✓] GET all contacts
-    - [✓] GET one contact by id
-    - [✓] POST - add new contact (name, email, phone)
-    - [✓] PUT - update information about contact
-    - [✓] PATCH - add contact to favorites
-    - [✓] DELETE contact
+    - [✓] /contacts - GET all contacts
+    - [✓] /contacts/:id - GET one contact by id
+    - [✓] /contacts - POST - add new contact (name, email, phone)
+    - [✓] /contacts/:id - PUT - update information about contact
+    - [✓] /contacts/:id/favorite" - PATCH - add contact to favorites
+    - [✓] /contacts/:id - DELETE contact
 - Authentication
-    - [✓] POST - Signup - registration (name, email, phone)
-    - [✓] POST - Login 
-    - [✓] GET - Current
-    - [✓] GET - Signout
+    - [✓] /users/signup - POST - Signup - registration (name, email, phone, avatar)
+    - [✓] /users/login - POST - Login 
+    - [✓] /users/current - GET - Current
+    - [✓] /users/logout - GET - Signout
+    - [✓] /users/avatar - PATCH - Adding an avatar to an existing profile
 
