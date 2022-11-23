@@ -17,6 +17,8 @@ const {
 const upload = require("../service/upload");
 const updateAvatar = require("../controller/updateAvatar");
 
+const {verify, reverify} = require()
+
 router.get("/contacts", get);
 router.get("/contacts/:id", getById);
 router.post("/contacts", create);
@@ -28,5 +30,8 @@ router.post("/users/login", login);
 router.get("/users/current", auth, current);
 router.get("/users/logout", auth, logout);
 router.patch("/users/avatar", auth, upload.single("avatar"), updateAvatar);
+
+router.get("/users/verify/:verificationToken", verify);
+router.post("/users/verify", reverify);
 
 module.exports = router;
