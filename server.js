@@ -11,13 +11,13 @@ const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
+app.use(express.static("public"));
+
 app.use(logger(formatsLogger));
 app.use(express.json());
 app.use(cors());
 
-
 require("./config/config-passport");
-
 
 const routerApi = require("./api");
 app.use("/api/", routerApi);

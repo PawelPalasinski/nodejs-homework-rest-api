@@ -16,4 +16,6 @@
     - [✓] /users/current - GET - Current
     - [✓] /users/logout - GET - Signout
     - [✓] /users/avatar - PATCH - Adding an avatar to an existing profile
+- Verification
+    - [✓] SendGrid
 
