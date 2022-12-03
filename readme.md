@@ -17,6 +17,5 @@
     - [✓] /users/logout - GET - Signout
     - [✓] /users/avatar - PATCH - Adding an avatar to an existing profile
 - Verification
-    - [x] /users/verify/:verificationToken - GET - 
-    - [x] /users/verify - POST - 
+    - [✓] SendGrid
 

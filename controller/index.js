@@ -5,6 +5,9 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
 const gravatar = require("gravatar");
 
+const { nanoid } = require("nanoid");
+const { sendEmail } = require("./verification");
+
 // GET all contacts
 
 const get = async (req, res, next) => {
@@ -27,8 +30,6 @@ const getById = async (req, res, next) => {
       res.status(200).json(contact);
     } else {
       res.status(404).json({
-        status: "error",
-        code: 404,
         message: `Not found contact id: ${id}`,
         data: "Not Found",
       });
@@ -150,6 +151,13 @@ const login = async (req, res, next) => {
     });
   }
 
+  if (!user || !user.verify) {
+    return res.status(400).json({
+      message: "Incorrect login or password",
+      data: "Bad request",
+    });
+  }
+
   const payload = {
     id: user.id,
     username: user.username,
@@ -174,29 +182,34 @@ const login = async (req, res, next) => {
 
 const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (user) {
-    return res.status(409).json({
-      message: "Email is already in use",
-      data: "Conflict",
-    });
-  }
-  try {
-    const avatarURL = gravatar.url({ email, s: "200", r: "pg" });
-    const newUser = new User({ username, email, avatarURL });
-    newUser.setPassword(password);
-    await newUser.save();
-    res.status(201).json({
-      data: {
-        message: "Registration successful",
-        email: newUser.email,
-        subscription: newUser.subscription,
-        avatarURL: newUser.avatarURL,
-      },
-    });
-  } catch (error) {
-    next(error);
-  }
+  const avatarURL = gravatar.url({ email, s: "200", r: "pg" });
+  const verificationToken = nanoid();
+  console.log(verificationToken);
+  const newUser = new User({
+    username,
+    email,
+    password,
+    avatarURL,
+    verificationToken,
+  });
+
+  newUser.setPassword(password);
+  await newUser.save();
+
+  const verifyEmail = {
+    to: email,
+    subject: "Please Verify Your Email",
+    html: `<p><a href='http://localhost:4000/api/users/verify/${verificationToken}' target='_blank'>Let's confirm your email: ${email}  and you can start using app.</a></p>`,
+  };
+
+  await sendEmail(verifyEmail);
+
+  res.status(201).json({
+    message: "Success register",
+    data: {
+      verificationToken,
+    },
+  });
 };
 
 // Current

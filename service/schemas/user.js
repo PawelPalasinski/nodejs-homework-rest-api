@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bCrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const userSchema = new Schema(
   {
@@ -72,6 +74,15 @@ userSchema.methods.setPassword = function (password) {
 
 userSchema.methods.validPassword = function (password) {
   return bCrypt.compareSync(password, this.password);
+};
+
+const { SEND_GRID_PASSWORD } = process.env;
+
+userSchema.methods.createToken = function () {
+  const payload = {
+    _id: this._id,
+  };
+  return jwt.sign(payload, SEND_GRID_PASSWORD);
 };
 
 const User = mongoose.model("user", userSchema);
